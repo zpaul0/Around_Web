@@ -4,13 +4,13 @@ import { Form, Input, Button, message } from 'antd';
 import $ from 'jquery';
 import { API_ROOT } from '../constants.js';
 import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
+
 
 const FormItem = Form.Item;
 
 class RegistrationForm extends React.Component {
-    static propTypes = {
-        handleLogin: PropTypes.func.isRequired,
+    state = {
+        confirmDirty: false
     }
 
     handleSubmit = (e) => {

@@ -17,7 +17,6 @@ class App extends Component {
         localStorage.removeItem(TOKEN_KEY);
     }
 
-
     render() {
         return (
             <div className="App">
