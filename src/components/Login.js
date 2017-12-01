@@ -4,14 +4,10 @@ import $ from 'jquery';
 import { Form, Icon, Input, Button, message } from 'antd';
 import { Link } from 'react-router-dom';
 import { API_ROOT } from '../constants';
-import PropTypes from 'prop-types';
 
 const FormItem = Form.Item;
 
 class NormalLoginForm extends React.Component {
-    static propTypes = {
-        handleLogin: PropTypes.func.isRequired,
-    }
 
     handleSubmit = (e) => {
         e.preventDefault();
@@ -26,7 +22,7 @@ class NormalLoginForm extends React.Component {
                         password: values.password,
                     })
                 }).then((response) => {
-                    this.props.handleLogin(response);
+                    message.success(response);
                 }, (error) => {
                     message.error(error.responseText);
                 }).catch((error) => {
