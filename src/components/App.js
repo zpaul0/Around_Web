@@ -16,7 +16,6 @@ class App extends Component {
         this.setState({isLoggedIn: false});
         localStorage.removeItem(TOKEN_KEY);
     }
-
     render() {
         return (
             <div className="App">
@@ -26,5 +25,4 @@ class App extends Component {
         );
     }
 }
-
 export default App;
