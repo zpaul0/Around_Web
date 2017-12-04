@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, message } from 'antd';
 import { WrappedCreatePostForm } from './CreatePostForm';
 import $ from 'jquery';
-import { API_ROOT, TOKEN_KEY, AUTH_PREFIX, POS_KEY } from '../constants';
+import { API_ROOT, TOKEN_KEY, AUTH_PREFIX, POST_KEY } from '../constants';
 
 export class CreatePostButton extends React.Component {
     state = {
@@ -22,7 +22,7 @@ export class CreatePostButton extends React.Component {
                 return;
             }
             console.log('Received values of form: ', values);
-            const { lat, lon } = JSON.parse(localStorage.getItem(POS_KEY));
+            const { lat, lon } = JSON.parse(localStorage.getItem(POST_KEY));
             const formData = new FormData();
             formData.set('lat', lat);
             formData.set('lon', lon);
