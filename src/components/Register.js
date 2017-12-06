@@ -5,14 +5,12 @@ import $ from 'jquery';
 import { API_ROOT } from '../constants.js';
 import { Link } from 'react-router-dom';
 
-
 const FormItem = Form.Item;
 
 class RegistrationForm extends React.Component {
     state = {
         confirmDirty: false
     }
-
     handleSubmit = (e) => {
         e.preventDefault();
         this.props.form.validateFieldsAndScroll((err, values) => {

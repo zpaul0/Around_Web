@@ -1,9 +1,10 @@
-import React, {Component} from 'react';
+
+import React, { Component } from 'react';
 import $ from 'jquery';
-import {Tabs, Spin} from 'antd';
-import {Gallery} from './Gallery';
-import {CreatePostButton} from './CreatePostButton';
-import {API_ROOT, TOKEN_KEY, AUTH_PREFIX, GEO_OPTIONS, POS_KEY} from '../constants';
+import { Tabs, Spin } from 'antd';
+import { Gallery } from './Gallery';
+import { CreatePostButton } from './CreatePostButton';
+import { API_ROOT, TOKEN_KEY, AUTH_PREFIX, GEO_OPTIONS, POST_KEY } from '../constants';
 
 
 export class Home extends Component {
@@ -20,26 +21,26 @@ export class Home extends Component {
 
     getGeoLocation = () => {
         if (navigator && navigator.geolocation) {
-            this.setState({loadingGeoLocation: true, error: ''});
+            this.setState({ loadingGeoLocation: true, error: '' });
             navigator.geolocation.getCurrentPosition(
                 this.onSuccessLoadGeoLocation,
                 this.onFailedLoadGeoLocation,
                 GEO_OPTIONS
             );
         } else {
-            this.setState({error: 'Your browser does not support geolocation!'});
+            this.setState({ error: 'Your browser does not support geolocation!'});
         }
     }
 
     onSuccessLoadGeoLocation = (position) => {
-        this.setState({loadingGeoLocation: false, error: ''});
-        const {latitude: lat, longitude: lon} = position.coords
-        localStorage.setItem(POS_KEY, JSON.stringify({lat: lat, lon: lon}));
+        this.setState({ loadingGeoLocation: false, error: '' });
+        const { latitude: lat, longitude: lon } = position.coords
+        localStorage.setItem(POST_KEY, JSON.stringify({ lat: lat, lon: lon }));
         this.loadNearbyPosts();
     }
 
     onFailedLoadGeoLocation = () => {
-        this.setState({loadingGeoLocation: false, error: 'Failed to load geo location!'});
+        this.setState({ loadingGeoLocation: false, error: 'Failed to load geo location!' });
     }
 
     componentDidMount() {
@@ -47,9 +48,8 @@ export class Home extends Component {
     }
 
     loadNearbyPosts = () => {
-        // const {lat, lon} = JSON.parse(localStorage.getItem(POS_KEY));
-        const {lat, lon} = {"lat": 37.5629917, "lon": -122.32552539999998};
-        this.setState({loadingPosts: true});
+        const { lat, lon } = JSON.parse(localStorage.getItem(POST_KEY));
+        this.setState({ loadingPosts: true });
         return $.ajax({
             url: `${API_ROOT}/search?lat=${lat}&lon=${lon}&range=20`,
             method: 'GET',
@@ -57,12 +57,12 @@ export class Home extends Component {
                 Authorization: `${AUTH_PREFIX} ${localStorage.getItem(TOKEN_KEY)}`,
             },
         }).then((response) => {
-            this.setState({posts: response, error: ''});
+            this.setState({ posts: response, error: '' });
             console.log(response);
         }, (error) => {
-            this.setState({error: error.responseText});
+            this.setState({ error: error.responseText });
         }).then(() => {
-            this.setState({loadingPosts: false});
+            this.setState({ loadingPosts: false });
         }).catch((error) => {
             console.log(error);
         });
@@ -115,3 +115,5 @@ export class Home extends Component {
         );
     }
 }
+
+

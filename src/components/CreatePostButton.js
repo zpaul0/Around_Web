@@ -1,39 +1,43 @@
 import React from 'react';
-import { Button, message } from 'antd';
-import { WrappedCreatePostForm } from './CreatePostForm';
 import $ from 'jquery';
+import { Modal, Button, message } from 'antd';
+import { WrappedCreatePostForm } from './CreatePostForm';
 import { API_ROOT, TOKEN_KEY, AUTH_PREFIX, POST_KEY } from '../constants';
+import { PropTypes } from 'prop-types';
 
 export class CreatePostButton extends React.Component {
+    static propTypes = {
+        loadNearbyPosts: PropTypes.func.isRequired,
+    }
     state = {
         visible: false,
         confirmLoading: false,
     }
     showModal = () => {
-        this.setState({ visible: true });
+        this.setState({
+            visible: true,
+        });
     }
-    handleCancel = () => {
-        this.setState({ visible: false });
-    }
-    handleCreate = () => {
-        const form = this.form;
+    handleOk = () => {
+        const form = this.form.getWrapperForm();
         form.validateFields((err, values) => {
-            if (err) {
-                return;
-            }
+            if (err) { return; }
             console.log('Received values of form: ', values);
+
             const { lat, lon } = JSON.parse(localStorage.getItem(POST_KEY));
             const formData = new FormData();
-            formData.set('lat', lat);
-            formData.set('lon', lon);
+            formData.set('lat', lat + Math.random() * 0.1 - 0.05);
+            formData.set('lon', lon + Math.random() * 0.1 - 0.05);
             formData.set('message', form.getFieldValue('message'));
             formData.set('image', form.getFieldValue('image')[0]);
+
+            //send post
             this.setState({ confirmLoading: true });
             $.ajax({
                 method: 'POST',
                 url: `${API_ROOT}/post`,
                 headers: {
-                    'Authorization': `${AUTH_PREFIX} ${localStorage.getItem(TOKEN_KEY)}`,
+                    Authorization: `${AUTH_PREFIX} ${localStorage.getItem(TOKEN_KEY)}`,
                 },
                 processData: false,
                 contentType: false,
@@ -42,30 +46,44 @@ export class CreatePostButton extends React.Component {
             }).then(() => {
                 message.success('created a post successfully.');
                 form.resetFields();
-            }).catch((e) => {
-                message.error('create post failed.');
-                console.error(e);
+            },(error) => {
+                message.error(error.responseText);
+                form.resetFields();
             }).then(() => {
                 this.props.loadNearbyPosts().then(() => {
                     this.setState({ visible: false, confirmLoading: false });
                 });
+            }).catch((e) => {
+                message.error('create post failed.');
+                console.error(e);
             });
+        });
+    }
+    handleCancel = () => {
+        console.log('Clicked cancel button');
+        this.setState({
+            visible: false,
         });
     }
     saveFormRef = (form) => {
         this.form = form;
     }
     render() {
+        const { visible, confirmLoading } = this.state;
         return (
             <div>
-                <Button type="primary" onClick={this.showModal}>New Post</Button>
-                <WrappedCreatePostForm
-                    ref={this.saveFormRef}
-                    visible={this.state.visible}
+                <Button type="primary" onClick={this.showModal}>Create New Post</Button>
+                <Modal
+                    title="Create New Post"
+                    visible={visible}
+                    okText="Create"
+                    cancelText="Cancel"
+                    onOk={this.handleOk}
+                    confirmLoading={confirmLoading}
                     onCancel={this.handleCancel}
-                    onCreate={this.handleCreate}
-                    confirmLoading={this.state.confirmLoading}
-                />
+                >
+                    <WrappedCreatePostForm wrappedComponentRef={this.saveFormRef}/>
+                </Modal>
             </div>
         );
     }

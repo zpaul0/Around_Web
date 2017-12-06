@@ -16,13 +16,17 @@ class App extends Component {
         this.setState({isLoggedIn: false});
         localStorage.removeItem(TOKEN_KEY);
     }
+
     render() {
         return (
             <div className="App">
-                <Header isLoggedIn={this.state.isLoggedIn} handleLogout={this.handleLogout}/>
-                <Main isLoggedIn={this.state.isLoggedIn} handleLogin={this.handleLogin}/>
+                <Header isLoggedIn={this.state.isLoggedIn}
+                        handleLogout={this.handleLogout}/>
+                <Main isLoggedIn={this.state.isLoggedIn}
+                      handleLogin={this.handleLogin}/>
             </div>
         );
     }
 }
+
 export default App;
