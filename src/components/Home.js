@@ -112,7 +112,7 @@ export class Home extends Component {
                 </TabPane>
                 <TabPane tab="Map" key="2">
                     <WrappedAroundMap
-                        // posts={this.state.posts}
+                        posts={this.state.posts}
                         // loadNearbyPosts={this.loadNearbyPosts}
                         googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyC4R6AN7SmujjPUIGKdyao2Kqitzr1kiRg&v=3.exp&libraries=geometry,drawing,places"
                         loadingElement={<div style={{ height: `100%` }} />}
