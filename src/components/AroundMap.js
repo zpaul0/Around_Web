@@ -9,20 +9,32 @@ class AroundMap extends React.Component {
     getMapRef = (map) => {
         this.map = map;
     }
-    onDragEnd = () => {
+    reloadMarkers = () => {
         const center = this.map.getCenter();
         const position = {lat: center.lat(), lon:center.lng()};
         // localStorage.setItem(POST_KEY, JSON.stringify(position));
-        this.props.loadNearbyPosts(position);
+        this.props.loadNearbyPosts(position, this.getRange());
     }
+    getRange = () => {
+        const google = window.google;
+        const center = this.map.getCenter();
+        const bounds = this.map.getBounds();
+        if (center && bounds) {
+            const ne = bounds.getNorthEast();
+            const right = new google.maps.LatLng(center.lat(), ne.lng());
+            return 0.000621371192 * google.maps.geometry.spherical.computeDistanceBetween(center, right);
+        }
+    }
+
 
 
     render() {
         const pos = JSON.parse(localStorage.getItem(POST_KEY));
         return (
             <GoogleMap
-                onDragEnd={this.onDragEnd}
+                onDragEnd={this.reloadMarkers}
                 ref={this.getMapRef}
+                onZoomChanged={this.reloadMarkers}
                 defaultZoom={11}
                 defaultCenter={{lat:pos.lat, lng:pos.lon}}
             >
