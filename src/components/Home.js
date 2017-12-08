@@ -50,7 +50,7 @@ export class Home extends Component {
     }
 
     loadNearbyPosts = () => {
-        const { lat, lon } = JSON.parse(localStorage.getItem(POST_KEY));
+        const { lat, lon } = location ? location : JSON.parse(localStorage.getItem(POST_KEY));
         this.setState({ loadingPosts: true });
         return $.ajax({
             url: `${API_ROOT}/search?lat=${lat}&lon=${lon}&range=20`,
