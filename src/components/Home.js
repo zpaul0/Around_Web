@@ -49,7 +49,7 @@ export class Home extends Component {
         this.getGeoLocation();
     }
 
-    loadNearbyPosts = () => {
+    loadNearbyPosts = (location) => {
         const { lat, lon } = location ? location : JSON.parse(localStorage.getItem(POST_KEY));
         this.setState({ loadingPosts: true });
         return $.ajax({
